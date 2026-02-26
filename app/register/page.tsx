@@ -4,21 +4,33 @@ import { useState } from "react";
 import Link from "next/link";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
+import { useAuth } from "@/app/lib/AuthContext";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { register } = useAuth();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            setError("Passwords do not match!");
             return;
         }
 
-        console.log("Register:", { email, password });
+        setLoading(true);
+        try {
+            await register(email, password);
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : "Registration failed");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -30,6 +42,10 @@ export default function RegisterPage() {
                 <p className="text-neutral-500 dark:text-neutral-400 text-center mb-8">
                     Start building forms with LemonForm
                 </p>
+
+                {error && (
+                    <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+                )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <Input
@@ -56,8 +72,8 @@ export default function RegisterPage() {
                         onChange={setConfirmPassword}
                         required
                     />
-                    <Button type="submit" fullWidth>
-                        Register
+                    <Button type="submit" fullWidth disabled={loading}>
+                        {loading ? "Creating account..." : "Register"}
                     </Button>
                 </form>
 
