@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getForm, submitResponse } from "@/app/lib/api";
+import { getFormPublic, submitResponse } from "@/app/lib/api";
 import type { Form, Question } from "@/app/lib/types";
 import { parseOptions } from "@/app/lib/types";
 import Button from "@/app/components/Button";
@@ -25,7 +25,7 @@ export default function RespondPage() {
         const fetchForm = async () => {
             setLoading(true);
             try {
-                const { form: data } = await getForm(Number(id));
+                const data = await getFormPublic(Number(id));
                 setForm(data);
                 // Initialize all answers to ""
                 const initial: Record<number, string> = {};

@@ -191,3 +191,11 @@ export async function listResponses(formId: number): Promise<FormResponse[]> {
     const data = await handleResponse<{ ok: boolean; responses: FormResponse[] }>(res);
     return data.responses;
 }
+
+// ── Public ──────────────────────────────────────────────────────
+
+export async function getFormPublic(id: number): Promise<Form> {
+    const res = await fetch(`${API_BASE}/forms/${id}/public`);
+    const data = await handleResponse<{ ok: boolean; form: Form }>(res);
+    return data.form;
+}
