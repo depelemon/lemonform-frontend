@@ -7,6 +7,7 @@ import { getForm, submitResponse } from "@/app/lib/api";
 import type { Form, Question } from "@/app/lib/types";
 import { parseOptions } from "@/app/lib/types";
 import Button from "@/app/components/Button";
+import Select from "@/app/components/Select";
 
 export default function RespondPage() {
     const { id } = useParams<{ id: string }>();
@@ -276,18 +277,15 @@ function QuestionField({ question, index, value, onChange, onToggleCheckbox }: Q
             )}
 
             {question.type === "dropdown" && options.length > 0 && (
-                <select
+                <Select
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-lemon"
-                >
-                    <option value="">Select an option...</option>
-                    {options.map((option) => (
-                        <option key={option} value={option}>
-                            {option}
-                        </option>
-                    ))}
-                </select>
+                    onChange={(v) => onChange(v)}
+                    options={[
+                        { value: "", label: "Select an option..." },
+                        ...options.map((option) => ({ value: option, label: option })),
+                    ]}
+                    className="w-full"
+                />
             )}
         </div>
     );

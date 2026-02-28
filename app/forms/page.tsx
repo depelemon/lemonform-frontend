@@ -7,6 +7,7 @@ import { useAuth } from "@/app/lib/AuthContext";
 import { listForms } from "@/app/lib/api";
 import type { Form } from "@/app/lib/types";
 import type { PaginationMeta } from "@/app/lib/types";
+import Select from "@/app/components/Select";
 
 export default function FormsPage() {
     const { isAuthenticated } = useAuth();
@@ -88,31 +89,31 @@ export default function FormsPage() {
                     onChange={(e) => setSearch(e.target.value)}
                     className="flex-1 px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-lemon"
                 />
-                <select
+                <Select
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as "" | "open" | "closed")}
-                    className="px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-lemon"
-                >
-                    <option value="">All statuses</option>
-                    <option value="open">Open</option>
-                    <option value="closed">Closed</option>
-                </select>
-                <select
+                    onChange={(v) => setStatusFilter(v as "" | "open" | "closed")}
+                    options={[
+                        { value: "", label: "All statuses" },
+                        { value: "open", label: "Open" },
+                        { value: "closed", label: "Closed" },
+                    ]}
+                />
+                <Select
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as "created_at" | "title")}
-                    className="px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-lemon"
-                >
-                    <option value="created_at">Sort by Date</option>
-                    <option value="title">Sort by Title</option>
-                </select>
-                <select
+                    onChange={(v) => setSortBy(v as "created_at" | "title")}
+                    options={[
+                        { value: "created_at", label: "Sort by Date" },
+                        { value: "title", label: "Sort by Title" },
+                    ]}
+                />
+                <Select
                     value={sort}
-                    onChange={(e) => setSort(e.target.value as "asc" | "desc")}
-                    className="px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-lemon"
-                >
-                    <option value="desc">{sortBy === "title" ? "Z → A" : "Newest first"}</option>
-                    <option value="asc">{sortBy === "title" ? "A → Z" : "Oldest first"}</option>
-                </select>
+                    onChange={(v) => setSort(v as "asc" | "desc")}
+                    options={[
+                        { value: "desc", label: sortBy === "title" ? "Z → A" : "Newest first" },
+                        { value: "asc", label: sortBy === "title" ? "A → Z" : "Oldest first" },
+                    ]}
+                />
             </div>
 
             {error && <p className="text-red-500 mb-6">{error}</p>}

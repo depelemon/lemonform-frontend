@@ -14,6 +14,7 @@ import {
 import type { Form, Question } from "@/app/lib/types";
 import { parseOptions } from "@/app/lib/types";
 import Button from "@/app/components/Button";
+import Select from "@/app/components/Select";
 
 type QuestionType = "short_answer" | "radio" | "checkbox" | "dropdown";
 
@@ -409,16 +410,17 @@ function QuestionEditor({
 
                 {/* Type selector & Required toggle row */}
                 <div className="flex gap-4 items-center">
-                    <select
+                    <Select
                         value={question.type}
-                        onChange={(e) => onUpdate({ type: e.target.value as QuestionType })}
-                        className="flex-1 px-4 py-2.5 rounded-lg border-2 border-gray-light dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white focus:outline-none focus:border-lemon"
-                    >
-                        <option value="short_answer">Short Answer</option>
-                        <option value="radio">Radio (single choice)</option>
-                        <option value="checkbox">Checkbox (multi choice)</option>
-                        <option value="dropdown">Dropdown</option>
-                    </select>
+                        onChange={(v) => onUpdate({ type: v as QuestionType })}
+                        options={[
+                            { value: "short_answer", label: "Short Answer" },
+                            { value: "radio", label: "Radio (single choice)" },
+                            { value: "checkbox", label: "Checkbox (multi choice)" },
+                            { value: "dropdown", label: "Dropdown" },
+                        ]}
+                        className="flex-1"
+                    />
 
                     <label className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300 cursor-pointer shrink-0">
                         <input
