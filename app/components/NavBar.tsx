@@ -9,7 +9,7 @@ export default function Navbar() {
     return (
         <nav className="sticky top-0 z-50 bg-white dark:bg-neutral-900 border-b-2 border-lemon">
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-                <Link href="/forms" className="text-xl font-bold text-neutral-900 dark:text-white">
+                <Link href="/" className="text-xl font-bold text-neutral-900 dark:text-white">
                     🍋 LemonForm
                 </Link>
 
