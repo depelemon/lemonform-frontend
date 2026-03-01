@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/Button";
 import { useAuth } from "@/app/lib/AuthContext";
@@ -12,7 +13,25 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const { register } = useAuth();
+    const { register, isAuthenticated } = useAuth();
+    const router = useRouter();
+
+    if (isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background">
+                <div className="w-full max-w-md bg-white dark:bg-neutral-800 rounded-2xl shadow-md p-8 text-center">
+                    <p className="text-neutral-900 dark:text-white font-semibold mb-2">You are already logged in.</p>
+                    <p className="text-neutral-500 dark:text-neutral-400 text-sm mb-6">Please log out first to create a new account.</p>
+                    <button
+                        onClick={() => router.push("/forms")}
+                        className="px-6 py-2.5 rounded-lg bg-lemon hover:bg-lemon-dark text-neutral-900 font-semibold cursor-pointer"
+                    >
+                        Go to My Forms
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

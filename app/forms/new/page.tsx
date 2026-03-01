@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/app/lib/AuthContext";
@@ -34,6 +34,7 @@ export default function NewFormPage() {
     const [status, setStatus] = useState<"open" | "closed">("open");
     const [questions, setQuestions] = useState<DraftQuestion[]>([]);
     const [submitting, setSubmitting] = useState(false);
+    const submittingRef = useRef(false);
     const [error, setError] = useState("");
 
     if (!isAuthenticated) {
@@ -97,10 +98,13 @@ export default function NewFormPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (submittingRef.current) return; // synchronous lock
+        submittingRef.current = true;
         setError("");
 
         if (!title.trim()) {
             setError("Title is required");
+            submittingRef.current = false;
             return;
         }
 
@@ -137,6 +141,7 @@ export default function NewFormPage() {
             setError(err instanceof Error ? err.message : "Failed to create form");
         } finally {
             setSubmitting(false);
+            submittingRef.current = false;
         }
     };
 

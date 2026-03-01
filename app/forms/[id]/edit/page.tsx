@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/app/lib/AuthContext";
@@ -61,6 +61,7 @@ export default function EditFormPage() {
     const [questions, setQuestions] = useState<DraftQuestion[]>([]);
     const [deletedQuestionIds, setDeletedQuestionIds] = useState<number[]>([]);
     const [saving, setSaving] = useState(false);
+    const savingRef = useRef(false);
 
     const hasResponses = responseCount > 0;
 
@@ -147,11 +148,13 @@ export default function EditFormPage() {
     // ── Save ────────────────────────────────────────────────────
 
     const handleSave = async () => {
-        if (!form) return;
+        if (!form || savingRef.current) return; // synchronous lock
+        savingRef.current = true;
         setError("");
 
         if (!title.trim()) {
             setError("Title is required");
+            savingRef.current = false;
             return;
         }
 
@@ -205,6 +208,7 @@ export default function EditFormPage() {
             setError(err instanceof Error ? err.message : "Failed to save");
         } finally {
             setSaving(false);
+            savingRef.current = false;
         }
     };
 

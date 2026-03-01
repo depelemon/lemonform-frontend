@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getFormPublic, submitResponse } from "@/app/lib/api";
@@ -19,6 +19,7 @@ export default function RespondPage() {
     // answers keyed by question ID
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [submitting, setSubmitting] = useState(false);
+    const submittingRef = useRef(false);
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
@@ -60,6 +61,8 @@ export default function RespondPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (submittingRef.current) return; // synchronous lock
+        submittingRef.current = true;
         setError("");
 
         if (!form) return;
@@ -104,6 +107,7 @@ export default function RespondPage() {
             setError(err instanceof Error ? err.message : "Failed to submit response");
         } finally {
             setSubmitting(false);
+            submittingRef.current = false;
         }
     };
 
